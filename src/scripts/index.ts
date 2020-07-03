@@ -1,3 +1,4 @@
+require('dotenv').config();
 import {prompt as Prompt} from 'inquirer';
 import {QuestionCollection} from 'inquirer';
 import migrateDB from './migrate';

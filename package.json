@@ -23,7 +23,7 @@
     "prestart": "npm run build",
     "start": "node -r source-map-support/register .",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
-    "precommit":"npm run clean && npm run build && npm run test && npm run lint:fix"
+    "precommit": "npm run clean && npm run build && npm run test && npm run lint:fix"
   },
   "dependencies": {
     "@loopback/boot": "^2.3.5",
@@ -33,7 +33,9 @@
     "@loopback/rest": "^5.2.0",
     "@loopback/rest-explorer": "^2.2.6",
     "@loopback/service-proxy": "^2.3.4",
+    "dotenv": "^8.2.0",
     "inquirer": "^7.3.0",
+    "loopback-connector-postgresql": "^5.0.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
