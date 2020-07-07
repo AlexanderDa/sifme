@@ -1,17 +1,26 @@
 import {repository} from '@loopback/repository';
+import {inject} from '@loopback/core';
 import {Application} from '../application';
 import {SifmePgcDataSource} from '../datasources';
-import {RoleRepository} from '../repositories';
-import {Role} from '../models';
-import {ROLES} from '../configs';
+import {RoleRepository, SimpleUserRepository} from '../repositories';
+import {Role, User} from '../models';
+import {DEFAULT_ROLES} from '../configs';
+import {DEFAULT_ADMIN} from '../configs';
+import {BcryptHasher} from '../services';
+import {PasswordBindings} from '../keys';
 
 /**
  * Migrate defaults to the database
  */
 class DefaultValues {
-  @repository(RoleRepository) public roleRepository: RoleRepository;
+  @repository(RoleRepository) public roleRepo: RoleRepository;
+  @repository(SimpleUserRepository) public userRepo: SimpleUserRepository;
+  @inject(PasswordBindings.ROUNDS) private readonly rounds: number;
+  public bcrypt: BcryptHasher;
   constructor() {
-    this.roleRepository = new RoleRepository(new SifmePgcDataSource());
+    this.roleRepo = new RoleRepository(new SifmePgcDataSource());
+    this.userRepo = new SimpleUserRepository(new SifmePgcDataSource());
+    this.bcrypt = new BcryptHasher(this.rounds);
   }
 
   /**
@@ -19,6 +28,7 @@ class DefaultValues {
    */
   public async migrate(): Promise<void> {
     await this.defaultRoles();
+    await this.defaultAdmin();
   }
 
   /**
@@ -26,11 +36,28 @@ class DefaultValues {
    */
   private async defaultRoles(): Promise<void> {
     // Migrate roles
-    for (const role of ROLES) {
-      if (!(await this.roleRepository.exists(role.id))) {
-        const saved: Role = await this.roleRepository.create(role);
+    for (const role of DEFAULT_ROLES) {
+      if (!(await this.roleRepo.exists(role.id))) {
+        const saved: Role = await this.roleRepo.create(role);
         console.log('migrated: ', saved);
       }
+    }
+  }
+
+  /**
+   * Migrate default admin user
+   */
+  private async defaultAdmin(): Promise<void> {
+    if (!(await this.userRepo.exists(1))) {
+      const admin: User = DEFAULT_ADMIN;
+      const password: string = admin.password;
+      admin.password = await this.bcrypt.encrypt(password);
+      const saved: User = await this.userRepo.create(admin);
+      console.log('migrated:  User', {
+        id: saved.id,
+        emailAddress: saved.email,
+        password,
+      });
     }
   }
 }

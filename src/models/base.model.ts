@@ -5,14 +5,15 @@ export class Base extends Entity {
   @property({
     type: 'date',
     required: true,
+    default: new Date(),
   })
-  creadedAt: string;
+  createdAt: string;
 
   @property({
     type: 'number',
     required: true,
   })
-  creadedBy: number;
+  createdBy: number;
 
   @property({
     type: 'date',

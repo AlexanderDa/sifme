@@ -1,14 +1,31 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent,
-} from '@loopback/rest-explorer';
+import {AuthenticationComponent} from '@loopback/authentication';
+import {registerAuthenticationStrategy} from '@loopback/authentication';
+import {ApplicationConfig, BindingKey} from '@loopback/core';
+import {RestExplorerBindings} from '@loopback/rest-explorer';
+import {RestExplorerComponent} from '@loopback/rest-explorer';
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {AccountBindings} from './keys';
+import {UserBindings} from './keys';
+import {PasswordBindings} from './keys';
+import {TokenBindings} from './keys';
+import {appInfo, AppInfo} from './utils/app.info';
+import {JWTAuthenticationStrategy} from './auth';
+import {SECURITY_SCHEME_SPEC} from './auth';
+import {MyAccountService, BcryptHasher} from './services';
+import {MyUserService} from './services';
+import {JWTService} from './services';
+import {TOKEN} from './configs';
+
+/**
+ * Information from package.json
+ */
+
+export const PackageKey = BindingKey.create<AppInfo>('application.package');
 
 export {ApplicationConfig};
 
@@ -18,9 +35,27 @@ export class Application extends BootMixin(
   constructor(options: ApplicationConfig = {}) {
     super(options);
 
+    this.api({
+      openapi: '3.0.0',
+      info: {
+        title: appInfo.name,
+        version: appInfo.version,
+        description: appInfo.description,
+      },
+      paths: {},
+      components: {securitySchemes: SECURITY_SCHEME_SPEC},
+      servers: [{url: '/'}],
+    });
+
+    this.setUpBindings();
+
+    // Bind authentication component related elements
+    this.component(AuthenticationComponent);
+
+    registerAuthenticationStrategy(this, JWTAuthenticationStrategy);
+
     // Set up the custom sequence
     this.sequence(MySequence);
-
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
 
@@ -40,5 +75,25 @@ export class Application extends BootMixin(
         nested: true,
       },
     };
+  }
+
+  setUpBindings(): void {
+    // Bind package.json to the application context
+    this.bind(PackageKey).to(appInfo);
+
+    this.bind(TokenBindings.SECRET).to(TOKEN.secret);
+
+    this.bind(TokenBindings.EXPIRES_IN).to(String(TOKEN.expiresIn));
+
+    this.bind(TokenBindings.SERVICE).toClass(JWTService);
+
+    // // Bind bcrypt hash services
+    this.bind(PasswordBindings.ROUNDS).to(10);
+    this.bind(PasswordBindings.HASHER).toClass(BcryptHasher);
+
+    this.bind(UserBindings.SERVICE).toClass(MyUserService);
+
+    // Account serices
+    this.bind(AccountBindings.SERVICE).toClass(MyAccountService);
   }
 }

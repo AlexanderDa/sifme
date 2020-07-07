@@ -1,9 +1,9 @@
 import {Application} from '../..';
-import {
-  createRestAppClient,
-  givenHttpServerConfig,
-  Client,
-} from '@loopback/testlab';
+import {createRestAppClient} from '@loopback/testlab';
+import {givenHttpServerConfig} from '@loopback/testlab';
+import {Client} from '@loopback/testlab';
+import {SimpleUserRepository} from '../../repositories';
+import {SifmePgcDataSource} from '../../datasources';
 
 export async function setupApplication(): Promise<AppWithClient> {
   const restConfig = givenHttpServerConfig({
@@ -24,6 +24,10 @@ export async function setupApplication(): Promise<AppWithClient> {
   const client = createRestAppClient(app);
 
   return {app, client};
+}
+
+export function setupUserRepository(): SimpleUserRepository {
+  return new SimpleUserRepository(new SifmePgcDataSource());
 }
 
 export interface AppWithClient {

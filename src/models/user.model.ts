@@ -1,22 +1,30 @@
-import {model, property} from '@loopback/repository';
+import {model, property, belongsTo} from '@loopback/repository';
 import {Base} from '.';
+import {Role} from './role.model';
 
 @model({
   name: 'dbuser',
   settings: {
-    hiddenProperties: ['password', 'passwordResetToken'],
-    foreignKeys: {},
+    hiddenProperties: ['password', 'verificationToken', 'passwordResetToken'],
+    foreignKeys: {
+      fkUserRole: {
+        name: 'fk_user_role',
+        entity: 'Role',
+        entityKey: 'id',
+        foreignKey: 'roleid',
+      },
+    },
     indexes: {
       uniqueEmail: {
-        keys: {emailAddress: 1},
+        keys: {email: 1},
         options: {unique: true},
       },
       uniquePasswordResetTokenCode: {
         keys: {passwordResetToken: 1},
         options: {unique: true},
       },
-      uniqueConfirmationCode: {
-        keys: {confirmationCode: 1},
+      uniqueVerificationToken: {
+        keys: {verificationToken: 1},
         options: {unique: true},
       },
     },
@@ -39,7 +47,7 @@ export class User extends Base {
       dataLength: 50,
     },
   })
-  emailAddress: string;
+  email: string;
 
   @property({
     type: 'string',
@@ -55,19 +63,15 @@ export class User extends Base {
   @property({
     type: 'boolean',
     default: false,
+    required: false,
   })
-  confirmed?: boolean;
+  emailVerified?: boolean;
 
   @property({
     type: 'string',
     required: false,
-    length: 20,
-    postgresql: {
-      dataType: 'character varying',
-      dataLength: 20,
-    },
   })
-  confirmationCode: string;
+  verificationToken: string;
 
   @property({
     type: 'boolean',
@@ -89,6 +93,9 @@ export class User extends Base {
     type: 'string',
   })
   passwordResetToken?: string;
+
+  @belongsTo(() => Role, {}, {required: true})
+  roleId: number;
 
   constructor(data?: Partial<User>) {
     super(data);
