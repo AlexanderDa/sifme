@@ -1,5 +1,7 @@
 require('dotenv').config();
 import {ApplicationConfig, Application} from './application';
+import {EMAIL} from './configs';
+import {cli} from './utils';
 
 export * from './application';
 
@@ -11,6 +13,9 @@ export async function main(options: ApplicationConfig = {}) {
   const url = app.restServer.url;
   console.log(`Server is running at ${url}`);
   console.log(`Try ${url}/ping`);
+  if (!EMAIL.isSupported()) {
+    console.log(`${cli.warning('WARNING')} email is not supported.`);
+  }
 
   return app;
 }

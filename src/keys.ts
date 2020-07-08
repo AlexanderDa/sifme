@@ -1,5 +1,5 @@
 import {BindingKey} from '@loopback/context';
-import {DecryptedHasher} from './services';
+import {DecryptedHasher, EmailService} from './services';
 import {TokenService} from '@loopback/authentication';
 import {UserService} from '@loopback/authentication';
 import {User} from './models';
@@ -30,5 +30,10 @@ export namespace UserBindings {
 export namespace AccountBindings {
   export const SERVICE = BindingKey.create<AccountService>(
     'services.account.service',
+  );
+}
+export namespace EmailBindings {
+  export const SERVICE = BindingKey.create<EmailService>(
+    'services.email.service',
   );
 }

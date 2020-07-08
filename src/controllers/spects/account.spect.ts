@@ -57,6 +57,36 @@ export function login(): RequestBodyObject {
 }
 
 /**
+ * Specifications to request login
+ */
+export function toActivate(): RequestBodyObject {
+  return {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          required: ['email', 'verificationToken', 'password'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+            },
+            verificationToken: {
+              type: 'string',
+            },
+            password: {
+              type: 'string',
+              minLength: 8,
+            },
+          },
+        },
+      },
+    },
+  };
+}
+
+/**
  * specifications to response information about logged account
  */
 export function me(): OperationObject {

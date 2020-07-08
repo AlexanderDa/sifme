@@ -9,14 +9,14 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-import {AccountBindings} from './keys';
+import {AccountBindings, EmailBindings} from './keys';
 import {UserBindings} from './keys';
 import {PasswordBindings} from './keys';
 import {TokenBindings} from './keys';
 import {appInfo, AppInfo} from './utils/app.info';
 import {JWTAuthenticationStrategy} from './auth';
 import {SECURITY_SCHEME_SPEC} from './auth';
-import {MyAccountService, BcryptHasher} from './services';
+import {MyAccountService, BcryptHasher, MyEmailService} from './services';
 import {MyUserService} from './services';
 import {JWTService} from './services';
 import {TOKEN} from './configs';
@@ -81,19 +81,22 @@ export class Application extends BootMixin(
     // Bind package.json to the application context
     this.bind(PackageKey).to(appInfo);
 
+    // token service
     this.bind(TokenBindings.SECRET).to(TOKEN.secret);
-
     this.bind(TokenBindings.EXPIRES_IN).to(String(TOKEN.expiresIn));
-
     this.bind(TokenBindings.SERVICE).toClass(JWTService);
 
-    // // Bind bcrypt hash services
+    // Bind bcrypt hash services
     this.bind(PasswordBindings.ROUNDS).to(10);
     this.bind(PasswordBindings.HASHER).toClass(BcryptHasher);
 
+    // User service
     this.bind(UserBindings.SERVICE).toClass(MyUserService);
 
-    // Account serices
+    // Account services
     this.bind(AccountBindings.SERVICE).toClass(MyAccountService);
+
+    // Email service
+    this.bind(EmailBindings.SERVICE).toClass(MyEmailService);
   }
 }

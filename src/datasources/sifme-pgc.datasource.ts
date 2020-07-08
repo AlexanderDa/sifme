@@ -1,6 +1,6 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-import {sifmePGC} from '../configs';
+import {SIFMEPGC} from '../configs';
 
 // Observe application's life cycle to disconnect the datasource when
 // application is stopped. This allows the application to be shut down
@@ -10,11 +10,11 @@ import {sifmePGC} from '../configs';
 export class SifmePgcDataSource extends juggler.DataSource
   implements LifeCycleObserver {
   static dataSourceName = 'sifmePGC';
-  static readonly defaultConfig = sifmePGC;
+  static readonly defaultConfig = SIFMEPGC;
 
   constructor(
     @inject('datasources.config.sifmePGC', {optional: true})
-    dsConfig: object = sifmePGC,
+    dsConfig: object = SIFMEPGC,
   ) {
     super(dsConfig);
   }

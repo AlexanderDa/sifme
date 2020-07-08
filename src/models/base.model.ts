@@ -16,17 +16,23 @@ export class Base extends Entity {
   createdBy: number;
 
   @property({
+    type: 'boolean',
+    required: false,
+    default: false,
+  })
+  deleted: boolean;
+
+  @property({
     type: 'date',
     required: false,
   })
   deletedAt: string;
 
   @property({
-    type: 'boolean',
+    type: 'number',
     required: false,
-    default: false,
   })
-  deleted: boolean;
+  deletedBy: number;
 
   constructor(data?: Partial<Base>) {
     super(data);
