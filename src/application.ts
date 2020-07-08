@@ -83,7 +83,7 @@ export class Application extends BootMixin(
 
     // token service
     this.bind(TokenBindings.SECRET).to(TOKEN.secret);
-    this.bind(TokenBindings.EXPIRES_IN).to(String(TOKEN.expiresIn));
+    this.bind(TokenBindings.EXPIRES_IN).to(TOKEN.expiresIn);
     this.bind(TokenBindings.SERVICE).toClass(JWTService);
 
     // Bind bcrypt hash services

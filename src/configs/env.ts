@@ -14,16 +14,16 @@ export const SIFMEPGC = {
 
 export const TOKEN = {
   secret: process.env.SIFME_TOKEN_SECRET ?? 'My$3cREtP4$S',
-  expiresIn: process.env.SIFME_TOKEN_EXPIRES_IN ?? 3600,
+  expiresIn: process.env.SIFME_TOKEN_EXPIRES_IN ?? '3600', // it must be a string
 };
 
 export const EMAIL = {
-  smptHost: process.env.SIFME_EMAIL_SMTP_HOST ?? '',
+  smptHost: process.env.SIFME_SMTP_HOST ?? '',
   address: process.env.SIFME_EMAIL_ADDRESS ?? '',
   password: process.env.SIFME_EMAIL_PASSWORD ?? '',
   isSupported: (): boolean => {
     return (
-      process.env.SIFME_EMAIL_SMTP_HOST !== undefined &&
+      process.env.SIFME_SMTP_HOST !== undefined &&
       process.env.SIFME_EMAIL_ADDRESS !== undefined &&
       process.env.SIFME_EMAIL_PASSWORD !== undefined
     );

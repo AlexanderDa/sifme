@@ -1,43 +1,50 @@
 # Environments
 
-This section describes the environment variables that the system uses back-end.
-
-* **Server**
-The server needs some variables like.
-
-| ENV NAME     | DEFAULT VALUE         | DESCRIPTION |
-| :----------- | :-------------------- | :---------- |
-| SIFME_DOMAIN | http://localhost:3000 | Domain name |
-
-* **Connection to the database**
-
-  The system is using *postgresql* as the database management system.
-
-| ENV NAME           | DEFAULT VALUE | DESCRIPTION                |
-| :----------------- | :------------ | :------------------------- |
-| SIFME_PGC_HOST     | localhost     | Database host.             |
-| SIFME_PGC_PORT     | 5432          | Port used by the database. |
-| SIFME_PGC_USER     | postgres      | Database user.             |
-| SIFME_PGC_PASSWORD | postgres      | Database user password.    |
-| SIFME_PGC_DATABASE | sifme         | Database name.             |
-
-* **Access token**
-
-  Access tokens that allow the navigability and the use of the API.
-
-| ENV NAME               | DEFAULT VALUE  | DESCRIPTION                               |
-| ---------------------- | -------------- | ----------------------------------------- |
-| SIFME_TOKEN_SECRET     | My\$3cREtP4\$S | Key to encryption.                        |
-| SIFME_TOKEN_EXPIRES_IN | 3600           | Validity time of a token in milliseconds. |
+Esta sección describe las variables de entorno necesarias para que  el back-end pueda funcionar correctamente, manteniendo la privacidad de credenciales.
 
 
 
-* **Email service**
+* **Servidor**
 
-  To facilitate the creation of a user account, it is recommended to use an email, for which the three variables shown below are required to enable this service, but if the variables do not exist, email services are not available.
-  
-| ENV NAME              | EXAMPLE            | DESCRIPTION                               |
-| :-------------------- | :----------------- | :---------------------------------------- |
-| SIFME_EMAIL_SMTP_HOST | smtp.office365.com | Is the hostname or IP address to connect. |
-| SIFME_EMAIL_ADDRESS   | user@example.com   | Email account                             |
-| SIFME_EMAIL_PASSWORD  | My\$3cREtP4\$S     | Email password                            |
+Configuración de las variables del servidor del servidor.
+
+| ENV          | POR DEFECTO           | DESCRIPCIÓN                                               |
+| :----------- | :-------------------- | :-------------------------------------------------------- |
+| SIFME_DOMAIN | http://localhost:3000 | Nombre del dominio, para la carga de archivos al sistema. |
+
+
+
+* **Base de datos**
+
+El sistema está utilizando *postgresql* como sistema de gestión de bases de datos, para lo cual es necesario estalecer las credenciales de acceso a dicho sistema de base de datos.
+
+| ENV                | POR DEFECTO | DESCRIPCIÓN                            |
+| :----------------- | :---------- | :------------------------------------- |
+| SIFME_PGC_HOST     | localhost   | Host de la base de datos.              |
+| SIFME_PGC_PORT     | 5432        | Puerto utilizado por la base de datos. |
+| SIFME_PGC_USER     | postgres    | Usuario de la base de datos.           |
+| SIFME_PGC_PASSWORD | postgres    | Contraseña de la base de datos.        |
+| SIFME_PGC_DATABASE | sifme       | Nombre de la base de datos.            |
+
+
+
+* **Token de acceso**
+
+Variables para el token de acceso que permite la autenticación de un usuario y el uso de la API.
+
+| ENV                    | POR DEFECTO    | DESCRIPCIÓN                                    |
+| ---------------------- | -------------- | ---------------------------------------------- |
+| SIFME_TOKEN_SECRET     | My\$3cREtP4\$S | Clave para el cifrado del token de acceso.     |
+| SIFME_TOKEN_EXPIRES_IN | 3600           | Tiempo de validez de un token en milisegundos. |
+
+
+
+* **Servicio de correo electrónico**
+
+Para facilitar la creación de una cuenta de usuario y la restauración de contraseñas se recomienda utilizar un correo electrónico, para habilitar este servicio se requieren las tres variables que se muestran a continuación, si las variables no existen, los servicios de correo electrónico no estará disponibles.
+
+| ENV                  | EJEMPLO            | DESCRIPCIÓN                                       |
+| :------------------- | :----------------- | :------------------------------------------------ |
+| SIFME_SMTP_HOST      | smtp.office365.com | Nombre de host o la dirección IP para conectarse. |
+| SIFME_EMAIL_ADDRESS  | user@example.com   | Cuenta de correo electrónico                      |
+| SIFME_EMAIL_PASSWORD | My\$3cREtP4\$S     | Contraseña de correo electrónico                  |
