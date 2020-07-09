@@ -21,6 +21,8 @@
     "cli": "node ./dist/scripts",
     "openapi-spec": "node ./dist/openapi-spec",
     "prestart": "npm run build",
+    "serve:client":"cd client && npm run serve",
+    "serve":"npm run start & npm run serve:client",
     "start": "node -r source-map-support/register .",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
     "precommit": "npm run clean && npm run build && npm run test && npm run lint:fix"

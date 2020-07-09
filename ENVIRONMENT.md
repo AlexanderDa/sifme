@@ -1,8 +1,10 @@
 # Environments
 
-Esta sección describe las variables de entorno necesarias para que  el back-end pueda funcionar correctamente, manteniendo la privacidad de credenciales.
+Esta sección describe las variables de entorno necesarias para que  el *back-end* y el *front-end*  puedan funcionar correctamente, manteniendo la privacidad de credenciales.
 
 
+
+## Back-end
 
 * **Servidor**
 
@@ -48,3 +50,17 @@ Para facilitar la creación de una cuenta de usuario y la restauración de contr
 | SIFME_SMTP_HOST      | smtp.office365.com | Nombre de host o la dirección IP para conectarse. |
 | SIFME_EMAIL_ADDRESS  | user@example.com   | Cuenta de correo electrónico                      |
 | SIFME_EMAIL_PASSWORD | My\$3cREtP4\$S     | Contraseña de correo electrónico                  |
+
+
+
+
+
+## Front-end
+
+El front-end usa variables de entorno que deben colocarse en el archivo *cliente /.env*, dichas variables se describen a continuación.
+
+| ENV    | EJEMPLO                   | DESCRIPCIÓN                      |
+| ------ | ------------------------- | -------------------------------- |
+| OUTPUT | ../public/client          | Directorio de salida             |
+| PROXY  | http://localhost:3000/api | Proxy para el acceso al API REST |
+

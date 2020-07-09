@@ -1,109 +1,109 @@
-import {model, property, belongsTo} from '@loopback/repository';
-import {Base} from '.';
-import {Role} from './role.model';
+import { model, property, belongsTo } from '@loopback/repository'
+import { Base } from '.'
+import { Role } from './role.model'
 
 @model({
-  name: 'dbuser',
-  settings: {
-    hiddenProperties: ['password', 'verificationToken', 'passwordResetToken'],
-    foreignKeys: {
-      fkUserRole: {
-        name: 'fk_user_role',
-        entity: 'Role',
-        entityKey: 'id',
-        foreignKey: 'roleid',
-      },
-    },
-    indexes: {
-      uniqueEmail: {
-        keys: {email: 1},
-        options: {unique: true},
-      },
-      uniquePasswordResetTokenCode: {
-        keys: {passwordResetToken: 1},
-        options: {unique: true},
-      },
-      uniqueVerificationToken: {
-        keys: {verificationToken: 1},
-        options: {unique: true},
-      },
-    },
-  },
+    name: 'dbuser',
+    settings: {
+        hiddenProperties: ['password', 'verificationToken', 'passwordResetToken'],
+        foreignKeys: {
+            fkUserRole: {
+                name: 'fk_user_role',
+                entity: 'Role',
+                entityKey: 'id',
+                foreignKey: 'roleid'
+            }
+        },
+        indexes: {
+            uniqueEmail: {
+                keys: { email: 1 },
+                options: { unique: true }
+            },
+            uniquePasswordResetTokenCode: {
+                keys: { passwordResetToken: 1 },
+                options: { unique: true }
+            },
+            uniqueVerificationToken: {
+                keys: { verificationToken: 1 },
+                options: { unique: true }
+            }
+        }
+    }
 })
 export class User extends Base {
-  @property({
-    type: 'number',
-    id: true,
-    generated: true,
-  })
-  id?: number;
+    @property({
+        type: 'number',
+        id: true,
+        generated: true
+    })
+    id?: number
 
-  @property({
-    type: 'string',
-    required: true,
-    length: 50,
-    postgresql: {
-      dataType: 'character varying',
-      dataLength: 50,
-    },
-  })
-  email: string;
+    @property({
+        type: 'string',
+        required: true,
+        length: 50,
+        postgresql: {
+            dataType: 'character varying',
+            dataLength: 50
+        }
+    })
+    email: string
 
-  @property({
-    type: 'string',
-    required: false,
-    length: 75,
-    postgresql: {
-      dataType: 'character varying',
-      dataLength: 75,
-    },
-  })
-  password: string;
+    @property({
+        type: 'string',
+        required: false,
+        length: 75,
+        postgresql: {
+            dataType: 'character varying',
+            dataLength: 75
+        }
+    })
+    password: string
 
-  @property({
-    type: 'boolean',
-    default: false,
-    required: false,
-  })
-  emailVerified?: boolean;
+    @property({
+        type: 'boolean',
+        default: false,
+        required: false
+    })
+    emailVerified?: boolean
 
-  @property({
-    type: 'string',
-    required: false,
-  })
-  verificationToken: string;
+    @property({
+        type: 'string',
+        required: false
+    })
+    verificationToken: string
 
-  @property({
-    type: 'boolean',
-    default: true,
-  })
-  isActive?: boolean;
+    @property({
+        type: 'boolean',
+        default: true
+    })
+    isActive?: boolean
 
-  @property({
-    type: 'string',
-    length: 75,
-    postgresql: {
-      dataType: 'character varying',
-      dataLength: 75,
-    },
-  })
-  image?: string;
+    @property({
+        type: 'string',
+        length: 75,
+        postgresql: {
+            dataType: 'character varying',
+            dataLength: 75
+        }
+    })
+    image?: string
 
-  @property({
-    type: 'string',
-  })
-  passwordResetToken?: string;
+    @property({
+        type: 'string'
+    })
+    passwordResetToken?: string
 
-  @belongsTo(() => Role, {}, {required: true})
-  roleId: number;
+    @belongsTo(() => Role, {}, { required: true })
+    roleId: number
 
-  constructor(data?: Partial<User>) {
-    super(data);
-  }
+    constructor(data?: Partial<User>) {
+        super(data)
+    }
 }
 
 export interface UserRelations {
-  // describe navigational properties here
+    // describe navigational properties here
 }
 
-export type UserWithRelations = User & UserRelations;
+export type UserWithRelations = User & UserRelations

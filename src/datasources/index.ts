@@ -1,1 +1,1 @@
-export * from './sifme-pgc.datasource';
+export * from './sifme-pgc.datasource'
