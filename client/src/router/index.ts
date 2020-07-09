@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
+import { LoginRoutes } from '@/router/AccountRoutes'
+import { ActivatorRoutes } from '@/router/AccountRoutes'
+import SettingsRoutes from '@/router/SettingsRoutes'
+import AdminRoutes from '@/router/AdminRoutes'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
-    /*{
-    path: '/',
-    name: 'Login',
-    component: () =>import('../views/Login.vue'),
-  },*/
+    LoginRoutes,
+    ActivatorRoutes,
+    SettingsRoutes,
+    AdminRoutes
 ]
 
 const router = new VueRouter({

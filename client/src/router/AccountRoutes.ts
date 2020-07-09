@@ -1,0 +1,12 @@
+import { RouteConfig } from 'vue-router'
+export const LoginRoutes: RouteConfig = {
+    path: '/',
+    name: 'Login',
+    component: () => import('@/views/account/login/LoginView.vue')
+}
+
+export const ActivatorRoutes: RouteConfig = {
+    path: '/activar',
+    name: 'Activator',
+    component: () => import('@/views/account/activation/ActivationView.vue')
+}
