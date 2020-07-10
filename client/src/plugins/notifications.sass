@@ -1,0 +1,28 @@
+
+.notices
+    & .toast
+        padding: 10px!important
+        min-height: auto!important
+        width: 300px!important
+    & .toast-icon
+        margin: 0px 5px!important
+    & .toast-text
+        padding: 0px!important
+        & .toast-caption
+            max-height:50px
+            overflow: auto
+        & ::-webkit-scrollbar
+            width:  5px
+        & ::-webkit-scrollbar-track 
+            background: rgba(255,255,255,0.3)
+        & ::-webkit-scrollbar-thumb
+            background: rgba(255,255,255,0.7)
+        
+
+            
+
+@media (max-width: 400px)
+    .notices
+        & .toast
+            width: calc(100% - 10px) !important
+            margin: 5px!important

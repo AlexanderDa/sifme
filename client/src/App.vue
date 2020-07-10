@@ -1,5 +1,10 @@
 <template>
-    <router-view />
+    <div>
+        <!-- for example router view -->
+        <router-view />
+        <!-- set progressbar -->
+        <vue-progress-bar />
+    </div>
 </template>
 
 <script lang="ts">

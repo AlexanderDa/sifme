@@ -6,7 +6,7 @@
         :type="showPwd ? 'text' : 'password'"
         required
         :value="value"
-        @input="input()"
+        @input="input"
         @click:append="onAppendIconClick()"
     />
 </template>
@@ -34,8 +34,8 @@ export default class LoginView extends Vue {
     }
 
     @Emit('input')
-    input(): string {
-        return ''
+    input(value: string): string {
+        return value
     }
 }
 </script>

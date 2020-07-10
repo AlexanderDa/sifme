@@ -13,8 +13,12 @@
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
+    "vue-progressbar": "^0.7.5",
     "vue-property-decorator": "^8.4.2",
+    "vue-resource": "^1.5.1",
+    "vue-resource-progressbar-interceptor": "^1.1.9",
     "vue-router": "^3.2.0",
+    "vue-toast-notification": "^0.4.1",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
