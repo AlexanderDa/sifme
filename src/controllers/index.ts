@@ -1,3 +1,5 @@
 export * from './ping.controller'
 export * from './account.controller'
 export * from './email.controller'
+export * from './role.controller'
+export * from './user.controller'

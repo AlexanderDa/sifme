@@ -14,7 +14,7 @@ export async function main(options: ApplicationConfig = {}) {
     console.log(`Server is running at ${url}`)
     console.log(`Try ${url}/ping`)
     if (!EMAIL.isSupported()) {
-        console.log(`${cli.warning('WARNING')} email is not supported.`)
+        console.log(cli.warning('Email is not supported'))
     }
 
     return app

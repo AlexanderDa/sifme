@@ -19,5 +19,9 @@ export const random = {
      */
     emailVerifiedCode: (email: string): string => {
         return `${email.split('@')[0]}:${randomString(10, false)}`
+    },
+
+    email: (): string => {
+        return `${randomString(6)}.test@sifme.com`.toLowerCase()
     }
 }

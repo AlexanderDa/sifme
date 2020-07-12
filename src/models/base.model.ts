@@ -1,11 +1,12 @@
 import { Entity, model, property } from '@loopback/repository'
+import { currentDate } from '../utils'
 
 @model()
 export class Base extends Entity {
     @property({
         type: 'date',
         required: true,
-        default: new Date()
+        default: currentDate()
     })
     createdAt: string
 
