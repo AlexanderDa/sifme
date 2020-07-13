@@ -25,7 +25,11 @@ export default class AdminView extends Vue {
 
     private changeRoute(item: Item) {
         if (item.routerName === 'Logout') {
-            this.$router.push({ name: 'Login' })
+            sessionStorage.removeItem('token')
+            // eslint-disable-next-line
+            // @ts-ignore
+            Vue.http.headers.common['Authorization'] = undefined
+            this.$router.push({ name: 'Root' })
         } else {
             this.$router.push({ name: item.routerName })
         }

@@ -3,7 +3,7 @@ const AdminRoutes: RouteConfig = {
     path: '/admin',
     name: 'Admin',
     component: () => import('@/layouts/admin/AdminLayout.vue'),
-    meta: { role: 'admin' },
+    meta: { auth: true, role: 'admin' },
     children: []
 }
 export default AdminRoutes

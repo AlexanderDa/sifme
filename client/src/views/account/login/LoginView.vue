@@ -23,9 +23,18 @@
                                         label="Usuario"
                                         type="email"
                                         required
-                                        v-model="username"
+                                        v-model="email"
                                     ></v-text-field>
                                     <Password v-model="password" time="1500" />
+                                    <v-alert
+                                        transition="scale-transition"
+                                        v-model="alert"
+                                        type="error"
+                                        dismissible
+                                        text
+                                    >
+                                        {{ error }}
+                                    </v-alert>
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-btn block color="primary white--text" type="submit"
