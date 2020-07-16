@@ -1,6 +1,7 @@
 require('dotenv').config()
+import fs from 'fs'
 import { ApplicationConfig, Application } from './application'
-import { EMAIL } from './configs'
+import { EMAIL, SERVER } from './configs'
 import { cli } from './utils'
 
 export * from './application'
@@ -42,4 +43,9 @@ if (require.main === module) {
         console.error('Cannot start the application.', err)
         process.exit(1)
     })
+}
+
+// create sandbox directory
+if (!fs.existsSync(SERVER.sandbox)) {
+    fs.mkdirSync(SERVER.sandbox)
 }

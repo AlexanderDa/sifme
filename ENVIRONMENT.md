@@ -10,9 +10,10 @@ Esta sección describe las variables de entorno necesarias para que  el *back-en
 
 Configuración de las variables del servidor del servidor.
 
-| ENV          | POR DEFECTO           | DESCRIPCIÓN                                               |
-| :----------- | :-------------------- | :-------------------------------------------------------- |
-| SIFME_DOMAIN | http://localhost:3000 | Nombre del dominio, para la carga de archivos al sistema. |
+| ENV           | POR DEFECTO           | DESCRIPCIÓN                                               |
+| :------------ | :-------------------- | :-------------------------------------------------------- |
+| SIFME_DOMAIN  | http://localhost:3000 | Nombre del dominio, para la carga de archivos al sistema. |
+| SIFME_SANDBOX | sigme/.sandbox        | Directorio para almacenar archivos cargados.              |
 
 
 
@@ -61,6 +62,6 @@ El front-end usa variables de entorno que deben colocarse en el archivo *cliente
 
 | ENV    | EJEMPLO                   | DESCRIPCIÓN                      |
 | ------ | ------------------------- | -------------------------------- |
-| OUTPUT | ../public/client          | Directorio de salida             |
+| OUTPUT | sigme/public/client       | Directorio de salida             |
 | PROXY  | http://localhost:3000/api | Proxy para el acceso al API REST |
 

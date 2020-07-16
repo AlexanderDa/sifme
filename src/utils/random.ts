@@ -4,7 +4,7 @@
  * @param date include date
  */
 function randomString(length: number, date?: boolean): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$'
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     let random = ''
     for (let i = 0; i < length; i++) {
         random += characters.charAt(Math.floor(Math.random() * characters.length))
@@ -20,8 +20,17 @@ export const random = {
     emailVerifiedCode: (email: string): string => {
         return `${email.split('@')[0]}:${randomString(10, false)}`
     },
-
+    /**
+     * Generate a random email address.
+     */
     email: (): string => {
         return `${randomString(6)}.test@sifme.com`.toLowerCase()
+    },
+    /**
+     * Generate a random file name
+     * @param extension file extension
+     */
+    filename: (extension: string): string => {
+        return `${randomString(25, true)}.${extension}`
     }
 }

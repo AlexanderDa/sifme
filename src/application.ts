@@ -9,14 +9,19 @@ import { RestApplication } from '@loopback/rest'
 import { ServiceMixin } from '@loopback/service-proxy'
 import path from 'path'
 import { MySequence } from './sequence'
-import { AccountBindings, EmailBindings } from './keys'
+import { AccountBindings } from './keys'
+import { EmailBindings } from './keys'
+import { StorageBindings } from './keys'
 import { UserBindings } from './keys'
 import { PasswordBindings } from './keys'
 import { TokenBindings } from './keys'
 import { appInfo, AppInfo } from './utils/app.info'
 import { JWTAuthenticationStrategy } from './auth'
 import { SECURITY_SCHEME_SPEC } from './auth'
-import { MyAccountService, BcryptHasher, MyEmailService } from './services'
+import { MyAccountService } from './services'
+import { BcryptHasher } from './services'
+import { MyEmailService } from './services'
+import { MyStorageService } from './services'
 import { MyUserService } from './services'
 import { JWTService } from './services'
 import { TOKEN } from './configs'
@@ -98,5 +103,8 @@ export class Application extends BootMixin(
 
         // Email service
         this.bind(EmailBindings.SERVICE).toClass(MyEmailService)
+
+        // Email service
+        this.bind(StorageBindings.SERVICE).toClass(MyStorageService)
     }
 }
