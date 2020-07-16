@@ -5,6 +5,7 @@ import { UserService } from '@loopback/authentication'
 import { User } from './models'
 import { Credentials } from './utils/credentials'
 import { AccountService } from './services/account.service'
+import { StorageHandler } from './services/storage.service'
 
 export namespace TokenBindings {
     export const SECRET = BindingKey.create<string>('authentication.jwt.secret')
@@ -32,4 +33,9 @@ export namespace AccountBindings {
 }
 export namespace EmailBindings {
     export const SERVICE = BindingKey.create<EmailService>('services.email.service')
+}
+
+export namespace StorageBindings {
+    export const SERVICE = BindingKey.create<StorageHandler>('services.FileUpload')
+    export const DIRECTORY = BindingKey.create<string>('storage.directory')
 }

@@ -9,7 +9,7 @@ import { RestApplication } from '@loopback/rest'
 import { ServiceMixin } from '@loopback/service-proxy'
 import path from 'path'
 import { MySequence } from './sequence'
-import { AccountBindings, EmailBindings } from './keys'
+import { AccountBindings, EmailBindings, StorageBindings } from './keys'
 import { UserBindings } from './keys'
 import { PasswordBindings } from './keys'
 import { TokenBindings } from './keys'
@@ -19,7 +19,8 @@ import { SECURITY_SCHEME_SPEC } from './auth'
 import { MyAccountService, BcryptHasher, MyEmailService } from './services'
 import { MyUserService } from './services'
 import { JWTService } from './services'
-import { TOKEN } from './configs'
+import { TOKEN, SERVER } from './configs'
+import multer from 'multer'
 
 /**
  * Information from package.json
@@ -65,6 +66,9 @@ export class Application extends BootMixin(
         })
         this.component(RestExplorerComponent)
 
+        // Configure file upload with multer options
+        this.configureFileUpload()
+
         this.projectRoot = __dirname
         // Customize @loopback/boot Booter Conventions here
         this.bootOptions = {
@@ -98,5 +102,22 @@ export class Application extends BootMixin(
 
         // Email service
         this.bind(EmailBindings.SERVICE).toClass(MyEmailService)
+    }
+
+    protected configureFileUpload() {
+        // Upload files to `.sandbox` by default
+        const destination: string = SERVER.sandbox
+        this.bind(StorageBindings.DIRECTORY).to(destination)
+        const multerOptions: multer.Options = {
+            storage: multer.diskStorage({
+                destination,
+                // Use the original file name as is
+                filename: (req, file, cb) => {
+                    cb(null, file.originalname)
+                }
+            })
+        }
+        // Configure the file upload service with multer options
+        this.configure(StorageBindings.SERVICE).to(multerOptions)
     }
 }

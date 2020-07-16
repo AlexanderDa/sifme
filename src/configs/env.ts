@@ -1,5 +1,8 @@
+import path from 'path'
+
 export const SERVER = {
-    domain: process.env.SIFME_DOMAIN ?? 'http://localhost:3000'
+    domain: process.env.SIFME_DOMAIN ?? 'http://localhost:3000',
+    sandbox: process.env.SIFME_SANDBOX ?? path.join(__dirname, '../../.sandbox')
 }
 
 export const SIFMEPGC = {
