@@ -2,7 +2,9 @@ import { repository } from '@loopback/repository'
 import { inject } from '@loopback/core'
 import { Application } from '../application'
 import { SifmePgcDataSource } from '../datasources'
-import { RoleRepository, SimpleUserRepository } from '../repositories'
+import { RoleRepository } from '../repositories'
+import { SimpleUserRepository } from '../repositories'
+import { ProfileRepository } from '../repositories'
 import { Role, User } from '../models'
 import { DEFAULT_ROLES } from '../configs'
 import { DEFAULT_ADMIN } from '../configs'
@@ -14,11 +16,13 @@ import { PasswordBindings } from '../keys'
  */
 class DefaultValues {
     @repository(RoleRepository) public roleRepo: RoleRepository
+    @repository(ProfileRepository) public profileRepo: ProfileRepository
     @repository(SimpleUserRepository) public userRepo: SimpleUserRepository
     @inject(PasswordBindings.ROUNDS) private readonly rounds: number
     public bcrypt: BcryptHasher
     constructor() {
         this.roleRepo = new RoleRepository(new SifmePgcDataSource())
+        this.profileRepo = new ProfileRepository(new SifmePgcDataSource())
         this.userRepo = new SimpleUserRepository(new SifmePgcDataSource())
         this.bcrypt = new BcryptHasher(this.rounds)
     }
@@ -50,14 +54,27 @@ class DefaultValues {
     private async defaultAdmin(): Promise<void> {
         if (!(await this.userRepo.exists(1))) {
             const admin: User = DEFAULT_ADMIN
-            const password: string = admin.password
-            admin.password = await this.bcrypt.encrypt(password)
-            const saved: User = await this.userRepo.create(admin)
-            console.log('migrated:  User', {
-                id: saved.id,
-                emailAddress: saved.email,
-                password
+
+            const profile = await this.profileRepo.create({
+                createdBy: 0,
+                firstName: 'admin',
+                lastName: 'sifme',
+                address: 'my address'
             })
+
+            if (profile) {
+                const password: string = admin.password
+                admin.password = await this.bcrypt.encrypt(password)
+                admin.profileId = profile.id ?? 0
+                const saved: User = await this.userRepo.create(admin)
+
+                console.log('migrated:  User', {
+                    id: saved.id,
+                    emailAddress: saved.email,
+                    password,
+                    profile: { lastName: profile.lastName, firstName: profile.firstName }
+                })
+            }
         }
     }
 }

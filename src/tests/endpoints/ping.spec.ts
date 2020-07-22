@@ -1,6 +1,6 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
-import { setupApplication } from './App'
+import { setupApplication } from './app.test'
 
 describe('Ping endpoint', () => {
     let app: Application

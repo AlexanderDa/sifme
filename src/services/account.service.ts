@@ -11,11 +11,18 @@ export class MyAccountService implements AccountService {
     constructor(@repository(UserRepository) public userRepository: UserRepository) {}
 
     async convertToUser(userProfile: UserProfile): Promise<User> {
-        const result = await this.userRepository.findOne({
+        // eslint-disable-next-line
+        let result: any = await this.userRepository.findOne({
             where: {
                 email: userProfile.name
-            }
+            },
+            include: [{ relation: 'profile' }]
         })
+
+        result.profile = {
+            lastName: result?.profile.lastName,
+            firstName: result?.profile.firstName
+        }
 
         const user: User = new User(result ?? undefined)
         return user

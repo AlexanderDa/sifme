@@ -19,6 +19,7 @@ import { SecurityBindings, UserProfile } from '@loopback/security'
 import { AccountBindings } from '../keys'
 import { AccountService } from '../services'
 import { currentDate } from '../utils'
+
 @authenticate('jwt')
 export class UserController {
     constructor(

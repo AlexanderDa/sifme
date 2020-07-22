@@ -1,6 +1,7 @@
 import { model, property, belongsTo } from '@loopback/repository'
 import { Base } from '.'
 import { Role } from './role.model'
+import { Profile } from './profile.model'
 
 @model({
     name: 'dbuser',
@@ -12,6 +13,12 @@ import { Role } from './role.model'
                 entity: 'Role',
                 entityKey: 'id',
                 foreignKey: 'roleid'
+            },
+            fkUserProfile: {
+                name: 'fk_user_profile',
+                entity: 'Profile',
+                entityKey: 'id',
+                foreignKey: 'profileid'
             }
         },
         indexes: {
@@ -63,7 +70,7 @@ export class User extends Base {
     @property({
         type: 'boolean',
         default: false,
-        required: false
+        required: true
     })
     emailVerified?: boolean
 
@@ -80,22 +87,15 @@ export class User extends Base {
     isActive?: boolean
 
     @property({
-        type: 'string',
-        length: 75,
-        postgresql: {
-            dataType: 'character varying',
-            dataLength: 75
-        }
-    })
-    image?: string
-
-    @property({
         type: 'string'
     })
     passwordResetToken?: string
 
     @belongsTo(() => Role, {}, { required: true })
     roleId: number
+
+    @belongsTo(() => Profile, {}, { required: true })
+    profileId: number
 
     constructor(data?: Partial<User>) {
         super(data)

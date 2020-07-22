@@ -1,6 +1,6 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
-import { setupApplication, setupUserRepository } from './App'
+import { setupApplication, setupUserRepository } from './app.test'
 import { DEFAULT_ADMIN } from '../../configs'
 import { SimpleUserRepository } from '../../repositories'
 

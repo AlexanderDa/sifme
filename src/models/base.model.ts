@@ -18,7 +18,7 @@ export class Base extends Entity {
 
     @property({
         type: 'boolean',
-        required: false,
+        required: true,
         default: false
     })
     deleted: boolean

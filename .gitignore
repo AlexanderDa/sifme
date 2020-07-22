@@ -64,5 +64,8 @@ typings/
 # Cache used by TypeScript's incremental build
 *.tsbuildinfo
 
+# lb4 datasource config
+*.datasource.config.json
+
 # default sandbox directory
 .sandbox

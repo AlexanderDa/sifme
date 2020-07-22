@@ -1,9 +1,10 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
-import { setupApplicationWithToken } from './App'
+import { setupApplicationWithToken } from './app.test'
 import { cli, random } from '../../utils'
 import { User } from '../../models'
 import { MEDICO } from '../../configs'
+import { NURSING } from '../../configs'
 
 let app: Application
 let client: Client
@@ -13,7 +14,11 @@ let user: User
 
 before('setupApplication', async () => {
     ;({ app, client, token, profile } = await setupApplicationWithToken())
-    user = new User({ email: random.email(), roleId: MEDICO.ID })
+    user = new User({
+        email: random.email(),
+        roleId: MEDICO.ID,
+        profileId: profile.profileId
+    })
 })
 
 after(async () => {
@@ -60,8 +65,8 @@ describe(cli.withAccess('User endpoint'), () => {
         await client
             .patch('/api/users')
             .auth(token, { type: 'bearer' })
-            .query({ roleId: 2 })
-            .send({ roleId: 3 })
+            .query({ where: { roleId: MEDICO.ID } })
+            .send({ roleId: NURSING.ID })
             .expect(200)
             .then(res => {
                 expect(res.body).to.have.property('count').to.be.Number()

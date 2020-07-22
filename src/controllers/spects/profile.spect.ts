@@ -7,14 +7,14 @@ import { requestBodySchema } from './Spect'
 import { responseOneSchema } from './Spect'
 import { responsePatchCountSchema } from './Spect'
 import { responseListSchema } from './Spect'
-import { User } from '../../models'
+import { Profile } from '../../models'
 
-class UserSpect implements SpectScheme {
+class ProfileSpect implements SpectScheme {
     /**
      * Specifications to request a body.
      */
     requestBody(): RequestBodyObject {
-        return requestBodySchema(User, {
+        return requestBodySchema(Profile, {
             exclude: [
                 'createdAt',
                 'createdBy',
@@ -22,11 +22,7 @@ class UserSpect implements SpectScheme {
                 'deletedAt',
                 'deletedBy',
                 'id',
-                'password',
-                'isActive',
-                'emailVerified',
-                'passwordResetToken',
-                'verificationToken'
+                'image'
             ]
         })
     }
@@ -35,52 +31,41 @@ class UserSpect implements SpectScheme {
      * Specifications to request partial body.
      */
     requestPartialBoby(): RequestBodyObject {
-        return requestBodySchema(User, {
+        return requestBodySchema(Profile, {
             partial: true,
-            exclude: [
-                'createdAt',
-                'createdBy',
-                'deleted',
-                'deletedAt',
-                'deletedBy',
-                'id',
-                'password',
-                'emailVerified',
-                'passwordResetToken',
-                'verificationToken'
-            ]
+            exclude: ['createdAt', 'createdBy', 'deleted', 'deletedAt', 'deletedBy', 'id']
         })
     }
 
     /**
-     * Specifications to response total of users.
+     * Specifications to response total of profiles.
      */
     responseCount(): OperationObject {
-        return responseCountSchema(User)
+        return responseCountSchema(Profile)
     }
 
     /**
-     * Specifications to response one user.
+     * Specifications to response one profile.
      */
     responseOne(): OperationObject {
-        return responseOneSchema(User, {
+        return responseOneSchema(Profile, {
             includeRelations: true,
-            exclude: ['password', 'verificationToken', 'passwordResetToken']
+            exclude: []
         })
     }
 
     /**
-     * Specifications to response array of users.
+     * Specifications to response array of profiles.
      */
     responseList(): OperationObject {
-        return responseListSchema(User, { includeRelations: true })
+        return responseListSchema(Profile, { includeRelations: true })
     }
 
     /**
-     * Specifications to response count of users updates.
+     * Specifications to response count of profiles updates.
      */
     responsePatchCount(): OperationObject {
-        return responsePatchCountSchema(User)
+        return responsePatchCountSchema(Profile)
     }
 
     /**
@@ -88,8 +73,8 @@ class UserSpect implements SpectScheme {
      * @param method methods allowed PATCH, PUT, DELETE
      */
     responseSimple(method: 'PATCH' | 'PUT' | 'DELETE'): OperationObject {
-        return responseSimpleSchema(User, method)
+        return responseSimpleSchema(Profile, method)
     }
 }
 
-export default new UserSpect()
+export default new ProfileSpect()

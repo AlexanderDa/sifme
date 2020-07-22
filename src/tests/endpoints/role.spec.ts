@@ -1,6 +1,6 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
-import { setupApplicationWithToken } from './App'
+import { setupApplicationWithToken } from './app.test'
 import { cli } from '../../utils'
 
 let app: Application
