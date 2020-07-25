@@ -1,7 +1,24 @@
 import { model, property } from '@loopback/repository'
 import { Base } from '.'
 
-@model()
+@model({
+    settings: {
+        indexes: {
+            uniqueProfileEmail: {
+                keys: { email: 1 },
+                options: { unique: true }
+            },
+            uniqueProfileDni: {
+                keys: { dni: 1 },
+                options: { unique: true }
+            },
+            uniqueProfilePassport: {
+                keys: { passport: 1 },
+                options: { unique: true }
+            }
+        }
+    }
+})
 export class Profile extends Base {
     @property({
         type: 'number',
@@ -75,6 +92,7 @@ export class Profile extends Base {
     @property({
         type: 'string',
         length: 50,
+        required: true,
         postgresql: {
             dataType: 'character varying',
             dataLength: 50

@@ -9,6 +9,13 @@ module.exports = {
                 pathRewrite: {
                     '^/api': ''
                 }
+            },
+            '/image': {
+                target: process.env.PROXY || 'http://localhost:3000/image',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/image': ''
+                }
             }
         }
     }
