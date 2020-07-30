@@ -18,7 +18,7 @@ import spect from './spects/user.spect'
 import { SecurityBindings, UserProfile } from '@loopback/security'
 import { AccountBindings } from '../keys'
 import { AccountService } from '../services'
-import { currentDate } from '../utils'
+import { currentDate, random } from '../utils'
 
 @authenticate('jwt')
 export class UserController {
@@ -46,6 +46,7 @@ export class UserController {
     ): Promise<User> {
         const myAccount = await this.acountService.convertToUser(account)
         user.createdBy = myAccount.id ?? 0
+        user.verificationToken = random.emailVerifiedCode(user.email)
         return this.profileRepository.user(id).create(user)
     }
 
@@ -108,7 +109,8 @@ export class UserController {
         await this.userRepository.updateById(id, {
             deleted: true,
             deletedBy: account.id,
-            deletedAt: currentDate()
+            deletedAt: currentDate(),
+            isActive: false
         })
     }
 }

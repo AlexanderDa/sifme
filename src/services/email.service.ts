@@ -5,14 +5,18 @@ import { SERVER } from '../configs'
 import { EMAIL } from '../configs'
 import { appInfo } from '../utils'
 
+interface EmailAccount {
+    username: string
+    image?: string
+    email: string
+    verificationToken: string
+}
+
 export interface EmailService {
     /**
      * Send the welcome email with the account activation code.
-     * @param name username
-     * @param email email to send
-     * @param confirmationCode code to validate account
      */
-    welcome(name: string, email: string, confirmationCode: string): Promise<void>
+    welcome(config: EmailAccount): Promise<void>
 }
 
 export class MyEmailService implements EmailService {
@@ -33,19 +37,20 @@ export class MyEmailService implements EmailService {
         return resolve(__dirname, '../../public/email/', name)
     }
 
-    async welcome(name: string, email: string, confirmationCode: string): Promise<void> {
+    async welcome(config: EmailAccount): Promise<void> {
         if (EMAIL.isSupported()) {
             const mailOptions = {
                 from: `${appInfo.name} <${EMAIL.address}>`,
-                to: email,
+                to: config.email,
                 subject: 'Bienvenido',
                 html: await renderFile(this.emailPath('welcome.ejs'), {
                     appUrl: SERVER.domain,
-                    name: name,
+                    username: config.username,
                     query: JSON.stringify({
-                        userName: name,
-                        activationCode: confirmationCode,
-                        emailAddress: email
+                        username: config.username,
+                        image: config.image,
+                        verificationToken: config.verificationToken,
+                        email: config.email
                     })
                 })
             }
