@@ -1,6 +1,6 @@
 import { OperationObject } from '@loopback/rest'
 import { RequestBodyObject } from '@loopback/rest'
-import { SpectScheme } from './Spect'
+import { SpectScheme, responseDeleteCountSchema } from './Spect'
 import { responseCountSchema } from './Spect'
 import { responseSimpleSchema } from './Spect'
 import { requestBodySchema } from './Spect'
@@ -81,6 +81,13 @@ class UserSpect implements SpectScheme {
      */
     responsePatchCount(): OperationObject {
         return responsePatchCountSchema(User)
+    }
+
+    /**
+     * Specifications to response count of users deleteds.
+     */
+    responseDeletedCount(): OperationObject {
+        return responseDeleteCountSchema('Profile.User')
     }
 
     /**

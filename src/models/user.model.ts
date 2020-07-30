@@ -1,7 +1,6 @@
 import { model, property, belongsTo } from '@loopback/repository'
 import { Base } from '.'
 import { Role } from './role.model'
-import { Profile } from './profile.model'
 
 @model({
     name: 'dbuser',
@@ -94,8 +93,10 @@ export class User extends Base {
     @belongsTo(() => Role, {}, { required: true })
     roleId: number
 
-    @belongsTo(() => Profile, {}, { required: true })
-    profileId: number
+    @property({
+        type: 'number'
+    })
+    profileId?: number
 
     constructor(data?: Partial<User>) {
         super(data)

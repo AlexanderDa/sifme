@@ -15,14 +15,8 @@ export class MyAccountService implements AccountService {
         let result: any = await this.userRepository.findOne({
             where: {
                 email: userProfile.name
-            },
-            include: [{ relation: 'profile' }]
+            }
         })
-
-        result.profile = {
-            lastName: result?.profile.lastName,
-            firstName: result?.profile.firstName
-        }
 
         const user: User = new User(result ?? undefined)
         return user

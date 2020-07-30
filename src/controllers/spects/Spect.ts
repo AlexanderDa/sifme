@@ -63,6 +63,18 @@ export function responsePatchCountSchema<M extends object>(
     }
 }
 
+export function responseDeleteCountSchema(model: string): OperationObject {
+    return {
+        security: OPERATION_SECURITY_SPEC,
+        responses: {
+            '200': {
+                description: `${model} DELETE success count`,
+                content: { 'application/json': { schema: CountSchema } }
+            }
+        }
+    }
+}
+
 export function responseListSchema<M extends object>(
     model: Function & { prototype: M },
     options?: JsonSchemaOptions<M>

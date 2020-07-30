@@ -12,8 +12,8 @@ import { patch } from '@loopback/rest'
 import { put } from '@loopback/rest'
 import { del } from '@loopback/rest'
 import { requestBody } from '@loopback/rest'
-import { User } from '../models'
-import { UserRepository } from '../repositories'
+import { User, Profile } from '../models'
+import { UserRepository, ProfileRepository } from '../repositories'
 import spect from './spects/user.spect'
 import { SecurityBindings, UserProfile } from '@loopback/security'
 import { AccountBindings } from '../keys'
@@ -24,10 +24,11 @@ import { currentDate } from '../utils'
 export class UserController {
     constructor(
         @repository(UserRepository) public userRepository: UserRepository,
+        @repository(ProfileRepository) protected profileRepository: ProfileRepository,
         @inject(AccountBindings.SERVICE) public acountService: AccountService
     ) {}
 
-    @post('/api/user', spect.responseOne())
+    /*@post('/api/user', spect.responseOne())
     async create(
         @requestBody(spect.requestBody()) user: Omit<User, 'id'>,
         @inject(SecurityBindings.USER) profile: UserProfile
@@ -35,6 +36,25 @@ export class UserController {
         const account = await this.acountService.convertToUser(profile)
         user.createdBy = account.id ?? 0
         return this.userRepository.create(user)
+    }*/
+
+    @post('/api/user/profile/{id}', spect.responseOne())
+    async create(
+        @param.path.number('id') id: typeof Profile.prototype.id,
+        @requestBody(spect.requestBody()) user: Omit<User, 'id'>,
+        @inject(SecurityBindings.USER) account: UserProfile
+    ): Promise<User> {
+        const myAccount = await this.acountService.convertToUser(account)
+        user.createdBy = myAccount.id ?? 0
+        return this.profileRepository.user(id).create(user)
+    }
+
+    @get('/api/user/profile/{id}', spect.responseOne())
+    async findByProfileId(
+        @param.path.number('id') id: number,
+        @param.query.object('filter') filter?: Filter<User>
+    ): Promise<User> {
+        return this.profileRepository.user(id).get(filter)
     }
 
     @get('/api/users/count', spect.responseCount())

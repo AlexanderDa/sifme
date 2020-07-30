@@ -2,8 +2,6 @@ import { Application } from '../..'
 import { createRestAppClient } from '@loopback/testlab'
 import { givenHttpServerConfig } from '@loopback/testlab'
 import { Client } from '@loopback/testlab'
-import { SimpleUserRepository } from '../../repositories'
-import { SifmePgcDataSource } from '../../datasources'
 import { DEFAULT_ADMIN } from '../../configs'
 import { User } from '../../models'
 
@@ -45,10 +43,6 @@ export async function setupApplicationWithToken(): Promise<AppWithClientLogged> 
     const profile: User = resProfile.body
 
     return { app, client, token, profile }
-}
-
-export function setupUserRepository(): SimpleUserRepository {
-    return new SimpleUserRepository(new SifmePgcDataSource())
 }
 
 export interface AppWithClient {

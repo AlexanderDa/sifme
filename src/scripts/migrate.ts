@@ -1,9 +1,7 @@
-import { repository } from '@loopback/repository'
 import { inject } from '@loopback/core'
 import { Application } from '../application'
-import { SifmePgcDataSource } from '../datasources'
-import { RoleRepository } from '../repositories'
-import { SimpleUserRepository } from '../repositories'
+import { RoleRepository, UserRepository } from '../repositories'
+import { givenHttpServerConfig } from '@loopback/testlab'
 import { ProfileRepository } from '../repositories'
 import { Role, User } from '../models'
 import { DEFAULT_ROLES } from '../configs'
@@ -14,35 +12,48 @@ import { PasswordBindings } from '../keys'
 /**
  * Migrate defaults to the database
  */
-class DefaultValues {
-    @repository(RoleRepository) public roleRepo: RoleRepository
-    @repository(ProfileRepository) public profileRepo: ProfileRepository
-    @repository(SimpleUserRepository) public userRepo: SimpleUserRepository
+class Migrate {
+    private app: Application
+
     @inject(PasswordBindings.ROUNDS) private readonly rounds: number
     public bcrypt: BcryptHasher
     constructor() {
-        this.roleRepo = new RoleRepository(new SifmePgcDataSource())
-        this.profileRepo = new ProfileRepository(new SifmePgcDataSource())
-        this.userRepo = new SimpleUserRepository(new SifmePgcDataSource())
         this.bcrypt = new BcryptHasher(this.rounds)
     }
 
     /**
-     * Migrate defaults
+     * Migrate database schema and defaults
      */
-    public async migrate(): Promise<void> {
-        await this.defaultRoles()
-        await this.defaultAdmin()
+    public async migrate(existingSchema: 'drop' | 'alter'): Promise<void> {
+        await this.initApp()
+
+        // Migrate schema
+        await this.createDB(existingSchema)
+
+        // Migrate defaults
+        await this.saveDefaultRoles()
+        await this.saveDefaultAdmin()
+
+        await this.app.stop()
+    }
+
+    /**
+     * Migrate database schema.
+     * @param existingSchema
+     */
+    private async createDB(existingSchema: 'drop' | 'alter'): Promise<void> {
+        await this.app.migrateSchema({ existingSchema })
     }
 
     /**
      * Migrate defaults user roles
      */
-    private async defaultRoles(): Promise<void> {
+    private async saveDefaultRoles(): Promise<void> {
+        const roleRepo: RoleRepository = await this.app.getRepository(RoleRepository)
         // Migrate roles
         for (const role of DEFAULT_ROLES) {
-            if (!(await this.roleRepo.exists(role.id))) {
-                const saved: Role = await this.roleRepo.create(role)
+            if (!(await roleRepo.exists(role.id))) {
+                const saved: Role = await roleRepo.create(role)
                 console.log('migrated: ', saved)
             }
         }
@@ -51,14 +62,19 @@ class DefaultValues {
     /**
      * Migrate default admin user
      */
-    private async defaultAdmin(): Promise<void> {
-        if (!(await this.userRepo.exists(1))) {
+    private async saveDefaultAdmin(): Promise<void> {
+        const userRepo: UserRepository = await this.app.getRepository(UserRepository)
+        const profileRepo: ProfileRepository = await this.app.getRepository(
+            ProfileRepository
+        )
+        if (!(await userRepo.exists(1))) {
             const admin: User = DEFAULT_ADMIN
 
-            const profile = await this.profileRepo.create({
+            const profile = await profileRepo.create({
                 createdBy: 0,
                 firstName: 'admin',
                 lastName: 'sifme',
+                email: admin.email,
                 address: 'my address'
             })
 
@@ -66,7 +82,7 @@ class DefaultValues {
                 const password: string = admin.password
                 admin.password = await this.bcrypt.encrypt(password)
                 admin.profileId = profile.id ?? 0
-                const saved: User = await this.userRepo.create(admin)
+                const saved: User = await userRepo.create(admin)
 
                 console.log('migrated:  User', {
                     id: saved.id,
@@ -77,6 +93,22 @@ class DefaultValues {
             }
         }
     }
+
+    /**
+     * Init the application
+     */
+    private async initApp(): Promise<void> {
+        const restConfig = givenHttpServerConfig({})
+
+        const app = new Application({
+            rest: restConfig
+        })
+
+        await app.boot()
+        await app.start()
+
+        this.app = app
+    }
 }
 
 /**
@@ -86,14 +118,7 @@ export default async function migrate(args: string[]) {
     const existingSchema = args.includes('--rebuild') ? 'drop' : 'alter'
     console.log('Migrating schemas (%s existing schema)', existingSchema)
 
-    //Migrate the database
-    const app = new Application()
-    await app.boot()
-    await app.migrateSchema({ existingSchema })
-
-    // Migrate default values
-    const values: DefaultValues = new DefaultValues()
-    await values.migrate()
+    await new Migrate().migrate(existingSchema)
 
     // Connectors usually keep a pool of opened connections,
     // this keeps the process running even after all work is done.

@@ -1,7 +1,8 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
 import { setupApplicationWithToken } from './app.test'
-import { cli } from '../../utils'
+import { ProfileRepository } from '../../repositories'
+import { cli, random } from '../../utils'
 import { Profile } from '../../models'
 import { User } from '../../models'
 
@@ -9,15 +10,10 @@ let app: Application
 let client: Client
 let token: string
 let profile: User
-let testProfile: Profile
+let profileModel: Profile
 
 before('setupApplication', async () => {
     ;({ app, client, token, profile } = await setupApplicationWithToken())
-    testProfile = new Profile({
-        lastName: `ln${Date.now()}`,
-        firstName: `fn${Date.now()}`,
-        address: `address${Date.now()}`
-    })
 })
 
 after(async () => {
@@ -28,14 +24,19 @@ describe(cli.withAccess('Profile endpoint'), () => {
     it('POST    =>  /api/profile', async () => {
         await client
             .post('/api/profile')
-            .send(testProfile)
+            .send({
+                lastName: `ln${Date.now()}`,
+                firstName: `fn${Date.now()}`,
+                address: `address${Date.now()}`,
+                email: random.email()
+            })
             .auth(token, { type: 'bearer' })
             .expect(200)
             .then(res => {
                 expect(res.body).to.have.property('createdAt').to.be.not.null()
                 expect(res.body).to.have.property('createdBy').to.be.equal(profile.id)
                 // element created
-                testProfile = res.body
+                profileModel = res.body
             })
     })
 
@@ -64,7 +65,7 @@ describe(cli.withAccess('Profile endpoint'), () => {
         await client
             .patch('/api/profiles')
             .auth(token, { type: 'bearer' })
-            .query({ where: { id: testProfile.id } })
+            .query({ where: { id: profileModel.id } })
             .send({ lastName: `ln_patch_${Date.now()}` })
             .expect(200)
             .then(res => {
@@ -74,19 +75,19 @@ describe(cli.withAccess('Profile endpoint'), () => {
 
     it('GET     =>  /api/profile/{id}', async () => {
         await client
-            .get(`/api/profile/${testProfile.id}`)
+            .get(`/api/profile/${profileModel.id}`)
             .auth(token, { type: 'bearer' })
             .expect(200)
             .then(res => {
                 expect(res.body)
                     .to.have.property('createdAt')
-                    .to.be.equal(testProfile.createdAt)
+                    .to.be.equal(profileModel.createdAt)
             })
     })
 
     it('PATCH   =>  /api/profile/{id}', async () => {
         await client
-            .patch(`/api/profile/${testProfile.id}`)
+            .patch(`/api/profile/${profileModel.id}`)
             .auth(token, { type: 'bearer' })
             .send({ firstName: `fn_patch_${Date.now()}` })
             .expect(204)
@@ -94,17 +95,28 @@ describe(cli.withAccess('Profile endpoint'), () => {
 
     it('PUT     =>  /api/profile/{id}', async () => {
         await client
-            .put(`/api/profile/${testProfile.id}`)
+            .put(`/api/profile/${profileModel.id}`)
             .auth(token, { type: 'bearer' })
-            .send(testProfile)
+            .send(profileModel)
             .expect(204)
     })
 
     it('DELETE  =>  /api/profile/{id}', async () => {
         await client
-            .delete(`/api/profile/${testProfile.id}`)
+            .delete(`/api/profile/${profileModel.id}`)
             .auth(token, { type: 'bearer' })
             .expect(204)
+            .then(async () => {
+                // check if it's in deleted status
+                const repo = await app.getRepository(ProfileRepository)
+                const result = await repo.findById(profileModel.id)
+                expect(result).to.have.property('deleted').to.be.eql(true)
+                expect(result).to.have.property('deletedAt').to.be.not.null()
+                expect(result).to.have.property('deletedBy').to.be.eql(profile.id)
+
+                // delete from database
+                await repo.deleteById(profileModel.id)
+            })
     })
 })
 

@@ -1,5 +1,6 @@
-import { model, property } from '@loopback/repository'
+import { model, property, hasOne } from '@loopback/repository'
 import { Base } from '.'
+import { User } from './user.model'
 
 @model({
     settings: {
@@ -125,6 +126,9 @@ export class Profile extends Base {
         required: true
     })
     address: string
+
+    @hasOne(() => User)
+    user: User
 
     constructor(data?: Partial<Profile>) {
         super(data)

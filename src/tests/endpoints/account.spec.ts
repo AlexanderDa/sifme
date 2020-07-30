@@ -1,18 +1,18 @@
 import { Client, expect } from '@loopback/testlab'
 import { Application } from '../..'
-import { setupApplication, setupUserRepository } from './app.test'
+import { setupApplication } from './app.test'
 import { DEFAULT_ADMIN } from '../../configs'
-import { SimpleUserRepository } from '../../repositories'
+import { UserRepository } from '../../repositories'
 
 describe('Account endpoint', () => {
     let app: Application
     let client: Client
     let adminId: number
-    let repository: SimpleUserRepository
+    let repository: UserRepository
 
     before('setupApplication', async () => {
         ;({ app, client } = await setupApplication())
-        repository = setupUserRepository()
+        repository = await app.getRepository(UserRepository)
         adminId =
             (
                 await repository.findOne({
