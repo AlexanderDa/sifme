@@ -4,6 +4,7 @@
         :append-icon="showPwd ? 'visibility_off' : 'visibility'"
         :label="label"
         :type="showPwd ? 'text' : 'password'"
+        :rules="rules"
         required
         :value="value"
         @input="input"
@@ -17,10 +18,11 @@ import Component from 'vue-class-component'
 import { Prop, Emit } from 'vue-property-decorator'
 
 @Component({ name: 'v-password-field' })
-export default class LoginView extends Vue {
+export default class Password extends Vue {
     @Prop() value!: number
     @Prop() time!: number
     @Prop({ default: 'Contraseña' }) label!: string
+    @Prop() rules!: object[]
 
     private showPwd: boolean = false
 

@@ -6,7 +6,7 @@ export const LoginRoutes: RouteConfig = {
 }
 
 export const ActivatorRoutes: RouteConfig = {
-    path: '/activar',
+    path: '/activate',
     name: 'Activator',
     component: () => import('@/views/account/activation/ActivationView.vue')
 }

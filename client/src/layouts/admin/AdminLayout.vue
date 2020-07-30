@@ -19,8 +19,8 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar clipped-left app class="primary">
-            <img src="@/assets/logo.svg" alt="Sifme" width="40" />
+        <v-app-bar clipped-left app dense class="primary">
+            <img src="@/assets/logo.svg" alt="Sifme" width="30" />
             <v-toolbar-title class="ml-4 white--text">Sifme</v-toolbar-title>
             <v-spacer></v-spacer>
 
@@ -39,7 +39,7 @@
                     <v-list>
                         <v-list-item>
                             <v-list-item-avatar>
-                                <img src="@/assets/logo.png" alt="Usuario" />
+                                <img src="@/assets/user.svg" alt="Usuario" />
                             </v-list-item-avatar>
 
                             <v-list-item-content>
@@ -76,12 +76,13 @@
         </v-app-bar>
 
         <v-main>
-            <router-view tag="v-container" fluid fill-height></router-view>
+            <router-view
+                class="admin-container"
+                tag="v-container"
+                fluid
+                fill-height
+            ></router-view>
         </v-main>
-
-        <v-footer inset app>
-            <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
-        </v-footer>
     </v-app>
 </template>
 
@@ -89,3 +90,10 @@
 import AdminLayout from '@/layouts/admin/AdminController'
 export default AdminLayout
 </script>
+
+<style scoped>
+.admin-container {
+    height: calc(100vh - 50px);
+    overflow: hidden;
+}
+</style>

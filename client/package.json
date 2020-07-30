@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "material-design-icons-iconfont": "^5.0.1",
+    "moment": "^2.27.0",
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
@@ -18,12 +19,14 @@
     "vue-resource": "^1.5.1",
     "vue-resource-progressbar-interceptor": "^1.1.9",
     "vue-router": "^3.2.0",
+    "vue-the-mask": "^0.11.1",
     "vue-toast-notification": "^0.4.1",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/mocha": "^5.2.4",
+    "@types/vue-the-mask": "^0.11.0",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-router": "~4.4.0",
     "@vue/cli-plugin-typescript": "~4.4.0",

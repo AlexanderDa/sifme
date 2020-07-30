@@ -16,12 +16,19 @@ interface Item {
 
 @Component({ name: 'admin-view' })
 export default class AdminView extends Vue {
-    public sideBarItems: Item[] = [{ icon: 'home', title: 'Principal' }]
+    public sideBarItems: Item[] = [{ icon: 'supervisor_account', title: 'Usuarios' }]
 
     public optionItems: Item[] = [
         { icon: 'settings', title: 'Configuraciones', routerName: 'Settings' },
         { icon: 'logout', title: 'Salir', routerName: 'Logout' }
     ]
+
+    async created(): Promise<void> {
+        //await this.$store.dispatch('loadRoles')
+        //service.findById(1)
+        //service.find({ where: { createdBy: 1 } })
+        //service.count({ createdBy: 1 })
+    }
 
     private changeRoute(item: Item) {
         if (item.routerName === 'Logout') {

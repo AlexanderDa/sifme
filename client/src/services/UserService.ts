@@ -12,7 +12,10 @@ class UserService implements Service<UserModel> {
      * @param user user to create
      */
     async create(user: Partial<UserModel>): Promise<UserModel> {
-        const res: HttpResponse = await Http.post(api('/user'), user)
+        const res: HttpResponse = await Http.post(
+            api('/user/profile', { id: user.profileId }),
+            user
+        )
         const data: UserModel = res.json()
         return data
     }
@@ -43,6 +46,17 @@ class UserService implements Service<UserModel> {
      */
     async findById(id: number, filter?: Filter<UserModel>): Promise<UserModel> {
         const res: HttpResponse = await Http.get(api('/user', { id, filter }))
+        const data: UserModel = await res.json()
+        return data
+    }
+
+    /**
+     * Search for a specific user record by their profile.
+     * @param id profile registration code
+     * @param filter search filter
+     */
+    async findByProfileId(id: number, filter?: Filter<UserModel>): Promise<UserModel> {
+        const res: HttpResponse = await Http.get(api('/user/profile', { id, filter }))
         const data: UserModel = await res.json()
         return data
     }

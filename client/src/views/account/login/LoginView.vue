@@ -51,8 +51,8 @@
 </template>
 
 <script lang="ts">
-import LoginView from './LoginController'
-export default LoginView
+import LoginController from './LoginController'
+export default LoginController
 </script>
 
 <style lang="sass">
