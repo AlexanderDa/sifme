@@ -13,11 +13,13 @@ export default class LoginView extends Vue {
     public login(): void {
         service
             .login(this.email, this.password)
-            .then((token: string) => {
+            .then(session => {
                 // eslint-disable-next-line
                 // @ts-ignore
-                Vue.http.headers.common['Authorization'] = token
-                sessionStorage.setItem('token', token)
+                Vue.http.headers.common['Authorization'] = session.token
+                sessionStorage.setItem('token', session.token)
+                sessionStorage.setItem('duration', String(session.duration))
+                sessionStorage.setItem('accessed', String(Date.now()))
                 this.$router.push({ name: 'Root' })
             })
             .catch(err => {

@@ -47,6 +47,18 @@ class ProfileService implements Service<ProfileModel> {
     }
 
     /**
+     * Search for a profile record from an user.
+     * @param id user registration code
+     */
+    async findFromUserId(
+        id: number,
+        filter?: Filter<ProfileModel>
+    ): Promise<ProfileModel> {
+        const res: HttpResponse = await Http.get(api('/profile/user', { id, filter }))
+        const data: ProfileModel = await res.json()
+        return data
+    }
+    /**
      * Update a specific profile record.
      * @param id registration code
      * @param profile profile to update

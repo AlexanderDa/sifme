@@ -23,11 +23,8 @@ export default class AdminView extends Vue {
         { icon: 'logout', title: 'Salir', routerName: 'Logout' }
     ]
 
-    async created(): Promise<void> {
-        //await this.$store.dispatch('loadRoles')
-        //service.findById(1)
-        //service.find({ where: { createdBy: 1 } })
-        //service.count({ createdBy: 1 })
+    async beforeMount(): Promise<void> {
+        await this.$store.dispatch('loadProfile')
     }
 
     private changeRoute(item: Item) {

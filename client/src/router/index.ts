@@ -1,10 +1,11 @@
 import Vue from 'vue'
-import VueRouter, {
-    RouteConfig,
-    Route,
-    NavigationGuardNext,
-    RouteRecord
-} from 'vue-router'
+import { compareDesc } from 'date-fns'
+import { add } from 'date-fns'
+import VueRouter from 'vue-router'
+import { RouteConfig, } from 'vue-router'
+import { Route, } from 'vue-router'
+import { NavigationGuardNext, } from 'vue-router'
+import { RouteRecord } from 'vue-router'
 import RootRouter from '@/router/RootRoutes'
 import service from '@/services/AccountService'
 import { LoginRoutes } from '@/router/AccountRoutes'
@@ -28,11 +29,29 @@ const router = new VueRouter({
     routes
 })
 
+/**
+ * check if the access token is valid.
+ */
+function isValidToken(): boolean {
+    // load stored values
+    const duration: number = Number(sessionStorage.getItem('duration'))
+    const accessed: number = Number(sessionStorage.getItem('accessed'))
+
+    // add duration
+    const validUntil: Date = add(accessed, { seconds: duration })
+
+
+    return compareDesc(Date.now(), validUntil) === 1
+
+}
+
+
 router.beforeEach((to: Route, from: Route, next: NavigationGuardNext) => {
     if (from.name === 'Root') next()
     else
         to.matched.some((record: RouteRecord) => {
             if (record.meta.auth) {
+                
                 service
                     .me()
                     // eslint-disable-next-line

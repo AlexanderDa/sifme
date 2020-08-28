@@ -39,14 +39,25 @@
                     <v-list>
                         <v-list-item>
                             <v-list-item-avatar>
-                                <img src="@/assets/user.svg" alt="Usuario" />
+                                <v-img
+                                    :src="
+                                        $store.state.session.profile.image ||
+                                        require('@/assets/user.svg')
+                                    "
+                                    alt="avatar"
+                                />
                             </v-list-item-avatar>
 
                             <v-list-item-content>
-                                <v-list-item-title>Alexander Bonilla</v-list-item-title>
-                                <v-list-item-subtitle
-                                    >adbonilla.fis@gmail.com</v-list-item-subtitle
+                                <v-list-item-title
+                                    >{{ $store.state.session.profile.lastName }}
+                                    {{
+                                        $store.state.session.profile.firstName
+                                    }}</v-list-item-title
                                 >
+                                <v-list-item-subtitle>{{
+                                    $store.state.session.profile.email
+                                }}</v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>

@@ -19,6 +19,9 @@ export function logged(): OperationObject {
                             properties: {
                                 token: {
                                     type: 'string'
+                                },
+                                duration: {
+                                    type: 'number'
                                 }
                             }
                         }

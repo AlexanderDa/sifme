@@ -15,8 +15,9 @@ import { PasswordBindings } from '../keys'
 import { User } from '../models'
 import { AccountService } from '../services'
 import { DecryptedHasher } from '../services'
-import * as spect from './spects/account.spect'
 import { UserRepository } from '../repositories'
+import * as spect from './spects/account.spect'
+import { TOKEN } from '../configs'
 
 export class AccountController {
     constructor(
@@ -32,7 +33,7 @@ export class AccountController {
     async login(
         @requestBody(spect.login())
         credentials: Credentials
-    ): Promise<{ token: string }> {
+    ): Promise<{ token: string; duration: number }> {
         // ensure the user exists, and the password is correct
         const user = await this.userService.verifyCredentials(credentials)
 
@@ -42,13 +43,13 @@ export class AccountController {
         // create a JSON Web Token based on the user profile
         const token = await this.jwtService.generateToken(userProfile)
 
-        return { token }
+        return { token, duration: Number(TOKEN.expiresIn) }
     }
 
     @post('/api/account/activate', spect.logged())
     async activate(
         @requestBody(spect.toActivate()) verifier: Verifier
-    ): Promise<{ token: string }> {
+    ): Promise<{ token: string; duration: number }> {
         let token = ''
         const user = await this.userRepo.findOne({
             where: { email: verifier.email }
@@ -73,7 +74,7 @@ export class AccountController {
         } else {
             throw new HttpErrors.BadRequest('BAD_ACCOUNT')
         }
-        return { token }
+        return { token, duration: Number(TOKEN.expiresIn) }
     }
 
     @authenticate('jwt')

@@ -1,7 +1,7 @@
 <template>
     <v-app id="sandbox">
-        <v-app-bar clipped-left app class="primary">
-            <img src="@/assets/logo.svg" alt="logo" width="40" />
+        <v-app-bar clipped-left app dense class="primary">
+            <img src="@/assets/logo.svg" alt="logo" width="30" />
             <v-toolbar-title class="ml-4 white--text">Configuraciones</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-tooltip bottom open-delay="1000">
@@ -15,16 +15,25 @@
         </v-app-bar>
 
         <v-main>
-            <router-view tag="v-container" fluid fill-height></router-view>
+            <router-view
+                tag="v-container"
+                fluid
+                fill-height
+                class="settings-container"
+            ></router-view>
         </v-main>
-
-        <v-footer inset app>
-            <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
-        </v-footer>
     </v-app>
 </template>
 
 <script lang="ts">
-import SettingsLayout from '@/layouts/settings/SettingsController'
+import SettingsLayout from './SettingsController'
 export default SettingsLayout
 </script>
+<style scoped>
+.settings-container {
+    height: calc(100vh - 50px);
+    width: 100vw;
+    margin-left: 0px;
+    overflow: auto;
+}
+</style>

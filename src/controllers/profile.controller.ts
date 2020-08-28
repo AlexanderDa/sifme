@@ -15,7 +15,7 @@ import { put } from '@loopback/rest'
 import { del } from '@loopback/rest'
 import { requestBody } from '@loopback/rest'
 import { Profile } from '../models'
-import { ProfileRepository } from '../repositories'
+import { ProfileRepository, UserRepository } from '../repositories'
 import { AccountBindings } from '../keys'
 import { AccountService } from '../services'
 import { currentDate } from '../utils'
@@ -24,6 +24,7 @@ import spect from './spects/profile.spect'
 @authenticate('jwt')
 export class ProfileController {
     constructor(
+        @repository(UserRepository) public userRepository: UserRepository,
         @repository(ProfileRepository) public profileRepository: ProfileRepository,
         @inject(AccountBindings.SERVICE) public acountService: AccountService
     ) {}
@@ -64,6 +65,16 @@ export class ProfileController {
         filter?: FilterExcludingWhere<Profile>
     ): Promise<Profile> {
         return this.profileRepository.findById(id, filter)
+    }
+
+    @get('/api/profile/user/{id}', spect.responseOne())
+    async findFromUserId(
+        @param.path.number('id') id: number,
+        @param.filter(Profile, { exclude: 'where' })
+        filter?: FilterExcludingWhere<Profile>
+    ): Promise<Profile> {
+        const user = await this.userRepository.findById(id)
+        return this.profileRepository.findById(user.profileId, filter)
     }
 
     @patch('/api/profile/{id}', spect.responseSimple('PATCH'))
